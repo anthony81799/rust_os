@@ -7,14 +7,18 @@
 use core::panic::PanicInfo;
 use rust_os::println;
 
+// Entry point
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
+    rust_os::init();
+
     #[cfg(test)]
     test_main();
 
-    loop {}
+    println!("It did not crash!");
+    rust_os::hlt_loop();
 }
 
 /// This function is called on panic.
@@ -22,11 +26,17 @@ pub extern "C" fn _start() -> ! {
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    rust_os::hlt_loop();
 }
 
+// Panic handler for tests
 #[cfg(test)]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     rust_os::test_panic_handler(info)
+}
+
+#[test_case]
+fn trivial_assertion() {
+    assert_eq!(1, 1);
 }
