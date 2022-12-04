@@ -4,14 +4,16 @@
 
 use core::panic::PanicInfo;
 use lazy_static::lazy_static;
-use rust_os::{exit_qemu, serial_print, serial_println, QemuExitCode};
+use rust_os::{
+    exit_qemu, gdt::init, serial_print, serial_println, test_panic_handler, QemuExitCode,
+};
 use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
 
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     serial_print!("stack_overflow::stack_overflow...\t");
 
-    rust_os::gdt::init();
+    init();
     init_test_idt();
 
     // trigger a stack overflow
@@ -54,5 +56,5 @@ extern "x86-interrupt" fn test_double_fault_handler(
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    rust_os::test_panic_handler(info)
+    test_panic_handler(info)
 }
