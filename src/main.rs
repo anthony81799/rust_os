@@ -11,6 +11,7 @@ use rust_os::{
     allocator,
     memory::{self, BootInfoFrameAllocator},
     println,
+    task::{executor::Executor, keyboard, Task},
 };
 use x86_64::VirtAddr;
 
@@ -50,8 +51,9 @@ fn kernel_main(boot_info: &'static BootInfo) -> ! {
     #[cfg(test)]
     test_main();
 
-    println!("It did not crash!");
-    rust_os::hlt_loop();
+    let mut executor = Executor::new();
+    executor.spawn(Task::new(keyboard::print_keypresses()));
+    executor.run();
 }
 
 /// This function is called on panic.
