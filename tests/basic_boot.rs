@@ -8,6 +8,7 @@ use core::panic::PanicInfo;
 use rust_os::{println, test_panic_handler};
 
 #[no_mangle] // don't mangle the name of this function
+#[allow(clippy::empty_loop)]
 pub extern "C" fn _start() -> ! {
     test_main();
 

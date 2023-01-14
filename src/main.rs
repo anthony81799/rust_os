@@ -73,5 +73,5 @@ fn panic(info: &PanicInfo) -> ! {
 
 #[test_case]
 fn trivial_assertion() {
-    assert_eq!(1, 1);
+    assert_ne!(2, 1);
 }

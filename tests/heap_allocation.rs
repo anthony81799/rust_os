@@ -16,6 +16,7 @@ use x86_64::VirtAddr;
 
 entry_point!(main);
 
+#[allow(clippy::empty_loop)]
 fn main(boot_info: &'static BootInfo) -> ! {
     rust_os::init();
     let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
